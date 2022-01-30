@@ -54,6 +54,7 @@ body {
 .chat-node-author {
    float: left;
 }
+
 .chat-node-message {
    font-size: 16px;
 }

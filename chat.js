@@ -232,7 +232,7 @@ function is_user_the_streamer(msg_author, streamer_username) {
    }
    return is_streamer
 }
-// Receive incoming messagess
+// Receive incoming messages
 client.on('message', (channel, user, msg, self) => {
    if(self) return;
    let msg_author = user['display-name'],
