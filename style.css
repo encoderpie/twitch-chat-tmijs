@@ -70,7 +70,7 @@ body {
    color: rgb(106, 145, 255);
 }
 
-#sidebar-box {
+.sidebar-boxs {
    background-color: rgb(20, 20, 20);
    border-radius: 5px;
    margin: 10px 0px 0px 60px;
@@ -88,7 +88,7 @@ body {
    letter-spacing: 2px;
 }
 
-#sidebar-box table {
+.sidebar-boxs table {
    border-collapse: collapse;
    font-size: 14px;
    width: 100%;
@@ -96,12 +96,12 @@ body {
    box-shadow: rgb(19, 19, 19) 0px 0px 10px 5px;
 }
 
-#sidebar-box table td {
+.sidebar-boxs table td {
    padding: 2px 5px;
    border: rgb(36, 36, 36) solid 1px;
 }
 
-#sidebar-box table td input {
+.sidebar-boxs table td input {
    cursor: pointer;
    margin: 4px -2px 0px 10px;
 }

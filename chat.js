@@ -1,6 +1,6 @@
 // Config - Settings
 const config = {
-   'channel_name': 'elraenn',
+   'channel_name': 'coderraenn',
    'chat_messages_limit': 100,
    'assets_dir': 'assets'
 }
@@ -187,6 +187,39 @@ const client = new tmi.Client({
    },
    channels: [config['channel_name']]
 })
+// Roomstate for Information
+const roomstate = new Map();
+client.on('roomstate', (channel, state) => {
+	if(roomstate.has(channel)) {
+		const rs = roomstate.get(channel);
+		Object.assign(rs, state);
+	}
+	else {
+		roomstate.set(channel, state);
+	}
+})
+// Information functions
+function updateInformation() {
+   const channel = client.channels[0]
+   let emoteonly = document.getElementById('data-emote-only')
+   let subsonly = document.getElementById('data-subs-only')
+   let slow = document.getElementById('data-slow')
+   let followersonly = document.getElementById('data-followers-only')
+   let channelid = document.getElementById('data-channel-id')
+   const rs = roomstate.get(channel);
+   if(roomstate.has(channel)) {
+      emoteonly.innerText = rs['emote-only'] ? 'Enabled' : 'Disabled'
+      subsonly.innerText = rs['subs-only'] ? 'Enabled' : 'Disabled'
+      slow.innerText = rs['slow'] ? rs['slow'] : 'Disabled'
+      if (rs['followers-only'] == -1) {
+         followersonly.innerText = 'Disabled'
+      } else {
+         followersonly.innerText = 'Enabled'
+      }
+      channelid.innerText = rs['room-id']
+   }   
+}
+updateInformation()
 client.connect().catch(console.error);
 // System Information
 client.on('connected', () => {
@@ -208,6 +241,7 @@ client.on('notice', (msgid, message) => {
    sendNodeMessage('systemmessage', `msgid: ${msgid}, message: ${message}`)
 })
 client.on('emoteonly', (channel, enabled) => {
+   updateInformation()
    if (enabled) {
       sendNodeMessage('systemmessage', 'Emote only enabled!')
    } else {
@@ -233,6 +267,7 @@ client.on('timeout', (channel, username, reason, duration, userstate) => {
    sendNodeMessage('systemmessage', `${username}'s timeouted! ${duration_filtered}${reason_filtered}`)
 })
 client.on('followersonly', (channel, enabled, length) => {
+   updateInformation()
    if (enabled) {
       sendNodeMessage('systemmessage', 'Followers only enabled!')
    } else {
@@ -246,6 +281,7 @@ client.on('unmod', (channel, username) => {
    sendNodeMessage('systemmessage', `${username}'s unmoded!`)
 })
 client.on('slowmode', (channel, enabled, length) => {
+   updateInformation()
    if (enabled) {
       sendNodeMessage('systemmessage', `Slowmode is on, slow: ${length}`)
    } else {
@@ -291,5 +327,6 @@ client.on('message', (channel, user, msg, self) => {
    let msg_filtered = reply_filter_data[0],
       is_reply_message = reply_filter_data[1]
    let is_streamer = is_user_the_streamer(msg_author, streamer_username)
+   updateInformation()
    sendNodeMessage('chatmessage', msg_filtered, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg)
 })
