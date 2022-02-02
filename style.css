@@ -73,8 +73,9 @@ body {
 #sidebar-box {
    background-color: rgb(20, 20, 20);
    border-radius: 5px;
-   margin: 8px;
+   margin: 10px 0px 0px 60px;
    width: 290px;
+   position: absolute;
    padding: 10px 10px;
    float: left;
    text-align: center;
@@ -129,6 +130,16 @@ body {
    float: right;
    overflow-x: hidden;
    bottom: 0px;
+}
+
+@media only screen and (max-width: 450px) {
+   .sidebar {
+     display: none;
+   }
+
+   #chat {
+      width: 100vw;
+   }
 }
 
 .chat-node {
