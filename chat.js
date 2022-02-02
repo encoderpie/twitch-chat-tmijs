@@ -4,6 +4,7 @@ const config = {
    'chat_messages_limit': 100,
    'assets_dir': 'assets'
 }
+const chat = document.getElementById('chat')
 // Current Time
 const currentTime = new Date() 
 let currentHour = currentTime.getHours(),
@@ -11,16 +12,64 @@ let currentHour = currentTime.getHours(),
 if (currentHour.toString().length == 1) currentHour = `0${currentHour}`
 if (currentMinute.toString().length == 1) currentMinute = `0${currentMinute}`
 let currentTimeCombined = `${currentHour}:${currentMinute}`
-const chat = document.getElementById('chat')
-// Loop variable to make messages look nicer
-let colorOrder = 0
+// Chat settings
+let chat_settings = []
+function resetChatSettings() {
+   let default_settings = ['show-time', 'show-badges']
+   let setting_item
+   let setting_item_index
+   if (chat_settings.length == 0) {
+      default_settings.forEach(element => {
+         setting_item = document.getElementById(element)
+         setting_item.checked = true
+      });
+   } else {
+      chat_settings.forEach(element => {
+         setting_item = document.getElementById(element)
+         setting_item_index = default_settings.indexOf(element)
+         if (setting_item_index != -1) {
+            setting_item.checked = true
+         } else {
+            setting_item.checked = false
+         }
+      });
+   }
+   chat_settings = default_settings
+}
+resetChatSettings()
+function sidebarItemCheckboxClicked(item) {
+   const setting_item = document.getElementById(item)
+   if (setting_item.checked) {
+      chat_settings.push(item)
+      sendNodeMessage('systemmessage', `${item} setting turned on!`)
+   } else {
+      let remove_item_index = chat_settings.indexOf(item)
+      if (remove_item_index != -1) {
+         chat_settings.splice(remove_item_index, 1)
+         sendNodeMessage('systemmessage', `${item} setting turned off.`)
+      }
+   }
+}
+// Function to implement chat settings
+function setting_activated(setting, if_there_is, if_not) {
+   let response
+   let setting_index = chat_settings.indexOf(setting)
+   if (setting_index != -1) {
+      response = if_there_is
+   } else {
+      response = if_not
+   }
+   return response
+}
 // Send chat message function
 let maxNodeLimit = config['chat_messages_limit'],
    whichNodeCounter = 0,
    deletedNodeCounter = 0,
    // If the color of the sender of the message is not set
-   msgAuthorDefaultColor = 'white'
-function sendNodeMessage(type, msg, msg_author, msg_author_color, is_streamer, badges, badge_info, is_reply_message, replied_user, replied_msg) {
+   msgAuthorDefaultColor = 'white',
+   // Loop variable to make messages look nicer
+   colorOrder = 0
+function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg) {
    const isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1
    const node = document.createElement('div')
    if (is_reply_message) {
@@ -32,16 +81,10 @@ function sendNodeMessage(type, msg, msg_author, msg_author_color, is_streamer, b
       replied.appendChild(reply_icon)
       // Replied message
       const replied_usrname_msg = document.createElement('p')
-      let replied_msg_filtered
-      if (replied_msg.length >= 70) {
-         replied_msg_filtered = `${replied_msg.slice(0, 70)}...`
-      } else {
-         replied_msg_filtered = replied_msg
-      }
-      replied_usrname_msg.innerText = `${replied_user}: ${replied_msg_filtered}`
+      replied_usrname_msg.innerText = `${replied_user}: ${replied_msg}`
+      replied_usrname_msg.setAttribute('title', `${replied_user}: ${replied_msg}`)
       replied.appendChild(replied_usrname_msg)
-      const asdasdasd = document.createElement('br')
-      replied.appendChild(asdasdasd)
+      replied.appendChild(document.createElement('br'))
       node.appendChild(replied)
    }
    const textNode_time = document.createElement('div'),
@@ -69,16 +112,16 @@ function sendNodeMessage(type, msg, msg_author, msg_author_color, is_streamer, b
    node.style.backgroundColor = bgcolor
    // Color of message author
    if (type != 'systemmessage') {
-      if (msg_author_color == null) {
-         textNode_author.style.color = msgAuthorDefaultColor 
-      } else {
-         textNode_author.style.color = msg_author_color
-      }
+      msg_author_color = setting_activated('author_colors_single_color', msgAuthorDefaultColor, user['color'])
+      textNode_author.style.color = msg_author_color
    }
    // Time
-   textNode_time.innerText = currentTimeCombined
-   textNode_time.className = 'chat-node-time'
-   node.appendChild(textNode_time)
+   let show_time = setting_activated('show-time', true, false)
+   if (show_time == true) {
+      textNode_time.innerText = currentTimeCombined
+      textNode_time.className = 'chat-node-time'
+      node.appendChild(textNode_time)
+   }
    // Badges
    let badge_broadcaster = 'https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1'
    let badge_premium = 'https://static-cdn.jtvnw.net/badges/v1/bbbe0db0-a598-423e-86d0-f9fb98ca1933/1'
@@ -104,7 +147,7 @@ function sendNodeMessage(type, msg, msg_author, msg_author_color, is_streamer, b
          if ( badge_name == 'subscriber'   ) {
             badge_img.setAttribute('src', badge_sub)
             badge_img.className = 'badge badge-sub'
-            if ( badge_info != null ) {
+            if (badge_info != null) {
                for (const [badge_info_name, value] of Object.entries(badge_info)) {
                   if ( badge_info_name == 'subscriber' ) {
                      badge_img.setAttribute('title', `${value} month subscription`)
@@ -112,7 +155,10 @@ function sendNodeMessage(type, msg, msg_author, msg_author_color, is_streamer, b
                }
             }
          }
-         node.appendChild(badge_img)
+         let show_badges = setting_activated('show-badges', true, false)
+         if (badge_img.hasAttribute('src') && show_badges) {
+            node.appendChild(badge_img)
+         }
       }
    }
    // Setting InnerText - ClassName - AppendChild's
@@ -144,7 +190,7 @@ const client = new tmi.Client({
 client.connect().catch(console.error);
 // System Information
 client.on('connected', () => {
-   sendNodeMessage('systemmessage', 'Connected!')
+   sendNodeMessage('systemmessage', `Connected to ${config['channel_name']}!`)
 })
 client.on('disconnected', () => {
    sendNodeMessage('systemmessage', 'Reconnecting...')
@@ -236,7 +282,6 @@ function is_user_the_streamer(msg_author, streamer_username) {
 client.on('message', (channel, user, msg, self) => {
    if(self) return;
    let msg_author = user['display-name'],
-      msg_author_color = user['color'],
       streamer_username = config['channel_name'],
       replied_user = user['reply-parent-display-name'],
       replied_msg = user['reply-parent-msg-body'],
@@ -246,5 +291,5 @@ client.on('message', (channel, user, msg, self) => {
    let msg_filtered = reply_filter_data[0],
       is_reply_message = reply_filter_data[1]
    let is_streamer = is_user_the_streamer(msg_author, streamer_username)
-   sendNodeMessage('chatmessage', msg_filtered, msg_author, msg_author_color, is_streamer, badges, badge_info, is_reply_message, replied_user, replied_msg)
+   sendNodeMessage('chatmessage', msg_filtered, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg)
 })

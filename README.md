@@ -24,8 +24,10 @@ const config = {
 - [x] Badges
 - [x] Auto scroll
 - [x] Show replied messages
-- [ ] Sidebar
+- [x] Sidebar
+- [x] Settings
 - [ ] Show logs (subscribers, gifts, hosts)
+- [ ] Protect and retrieve chat history
 
 ### Contact
 Bug reports and feedback for: Discord Server & Discord Username: discord.com/invite/Rnny2wF9MD & encoderpie#3312
