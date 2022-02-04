@@ -1,17 +1,25 @@
-// Config - Settings
+// Config settings
 const config = {
    'channel_name': 'elraenn',
    'chat_messages_limit': 100,
-   'assets_dir': 'assets'
+   'assets_dir': 'assets',
+}
+const config_colors = {
+   'message_author_default_color': 'white',
+   'primary_node_color': '#1b212b',
+   'secondary_node_color': 'rgb(13 13 16)'
 }
 const chat = document.getElementById('chat')
 // Current Time
-const currentTime = new Date() 
-let currentHour = currentTime.getHours(),
-   currentMinute = currentTime.getMinutes()
-if (currentHour.toString().length == 1) currentHour = `0${currentHour}`
-if (currentMinute.toString().length == 1) currentMinute = `0${currentMinute}`
-let currentTimeCombined = `${currentHour}:${currentMinute}`
+function getCurrentTime() {
+   const currentTime = new Date() 
+   let currentHour = currentTime.getHours(),
+      currentMinute = currentTime.getMinutes()
+   if (currentHour.toString().length == 1) currentHour = `0${currentHour}`
+   if (currentMinute.toString().length == 1) currentMinute = `0${currentMinute}`
+   let currentTimeCombined = `${currentHour}:${currentMinute}`
+   return currentTimeCombined
+}
 // Chat settings
 let chat_settings = []
 function resetChatSettings() {
@@ -63,15 +71,38 @@ function setting_activated(setting, if_there_is, if_not) {
 }
 // Send chat message function
 let maxNodeLimit = config['chat_messages_limit'],
+   msgAuthorDefaultColor = config['message_author_default_color'],
    whichNodeCounter = 0,
    deletedNodeCounter = 0,
-   // If the color of the sender of the message is not set
-   msgAuthorDefaultColor = 'white',
-   // Loop variable to make messages look nicer
    colorOrder = 0
 function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg) {
    const isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1
    const node = document.createElement('div')
+   
+   // Node Limit
+   whichNodeCounter += 1
+   node.setAttribute('which-node', whichNodeCounter)
+   if (whichNodeCounter > maxNodeLimit) {
+      deletedNodeCounter += 1
+      $(`div[which-node=${deletedNodeCounter}]`).remove();
+   }
+   
+   // Color the nodes
+   if (colorOrder == 0) {
+      bgcolor = config_colors['primary_node_color']
+      colorOrder = 1
+   } else {
+      bgcolor = config_colors['secondary_node_color']
+      colorOrder = 0
+   }
+   node.style.backgroundColor = bgcolor
+
+   // Set border if message author is streamer
+   if (is_streamer) {
+      node.style.border = 'solid rgb(226, 0, 0) 3px'
+   }
+
+   // Reply
    if (is_reply_message) {
       const replied = document.createElement('div')
       replied.className = 'replied-msg-container'
@@ -87,38 +118,11 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
       replied.appendChild(document.createElement('br'))
       node.appendChild(replied)
    }
-   const textNode_time = document.createElement('div'),
-      textNode_message = document.createElement('div')
-   if (type != 'systemmessage') { textNode_author = document.createElement('div') }
-   // Node Limit
-   whichNodeCounter += 1
-   node.setAttribute('which-node', whichNodeCounter)
-   if (whichNodeCounter > maxNodeLimit) {
-      deletedNodeCounter += 1
-      $(`div[which-node=${deletedNodeCounter}]`).remove();
-   }
-   // Set border if message author is streamer
-   if (is_streamer) {
-      node.style.border = 'solid rgb(226, 0, 0) 4px'
-   }
-   // Color the nodes
-   if (colorOrder == 0) {
-      bgcolor = '#1b212b'
-      colorOrder = 1
-   } else {
-      bgcolor = 'rgb(13 13 16)'
-      colorOrder = 0
-   }
-   node.style.backgroundColor = bgcolor
-   // Color of message author
-   if (type != 'systemmessage') {
-      msg_author_color = setting_activated('author_colors_single_color', msgAuthorDefaultColor, user['color'])
-      textNode_author.style.color = msg_author_color
-   }
    // Time
    let show_time = setting_activated('show-time', true, false)
+   const textNode_time = document.createElement('div')
    if (show_time == true) {
-      textNode_time.innerText = currentTimeCombined
+      textNode_time.innerText = getCurrentTime()
       textNode_time.className = 'chat-node-time'
       node.appendChild(textNode_time)
    }
@@ -161,7 +165,14 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
          }
       }
    }
+   // Author
+   if (type != 'systemmessage') {
+      textNode_author = document.createElement('div')
+      msg_author_color = setting_activated('author_colors_single_color', config_colors['message_author_default_color'], user['color'])
+      textNode_author.style.color = msg_author_color
+   }
    // Setting InnerText - ClassName - AppendChild's
+   const textNode_message = document.createElement('div')
    if (type == 'systemmessage') {
       textNode_message.innerText = msg
       node.className = 'chat-node chat-node-system-message'
@@ -202,7 +213,7 @@ client.on('roomstate', (channel, state) => {
 function updateInformation() {
    const channel = client.channels[0]
    const rs = roomstate.get(channel)
-   $("#chat-informations tr").remove()
+   $('#chat-informations tr').remove()
    if(roomstate.has(channel)) {
       let datas = {
          'Emote only': rs['emote-only'] ? 'Enabled' : 'Disabled',
@@ -245,12 +256,12 @@ client.on('notice', (msgid, message) => {
    sendNodeMessage('systemmessage', `msgid: ${msgid}, message: ${message}`)
 })
 client.on('emoteonly', (channel, enabled) => {
-   updateInformation()
    if (enabled) {
       sendNodeMessage('systemmessage', 'Emote only enabled!')
    } else {
       sendNodeMessage('systemmessage', 'Emote only is no longer on.')
    }
+   updateInformation()
 })
 client.on('ban', (channel, username, reason, userstate) => {
    let reason_filtered = ''
@@ -271,12 +282,12 @@ client.on('timeout', (channel, username, reason, duration, userstate) => {
    sendNodeMessage('systemmessage', `${username}'s timeouted! ${duration_filtered}${reason_filtered}`)
 })
 client.on('followersonly', (channel, enabled, length) => {
-   updateInformation()
    if (enabled) {
       sendNodeMessage('systemmessage', 'Followers only enabled!')
    } else {
       sendNodeMessage('systemmessage', 'Followers only is no longer on.')
    }
+   updateInformation()
 })
 client.on('mod', (channel, username) => {
    sendNodeMessage('systemmessage', `${username}'s modded!`)
@@ -285,14 +296,14 @@ client.on('unmod', (channel, username) => {
    sendNodeMessage('systemmessage', `${username}'s unmoded!`)
 })
 client.on('slowmode', (channel, enabled, length) => {
-   updateInformation()
    if (enabled) {
       sendNodeMessage('systemmessage', `Slowmode is on, slow: ${length}`)
    } else {
       sendNodeMessage('systemmessage', 'Slowmode only is no longer on.')
    }
+   updateInformation()
 })
-// Short functions
+// Reply message filter
 function reply_filter_msg(replied_username, msg) {
    let is_reply_message
    let msg_filtered
@@ -309,6 +320,7 @@ function reply_filter_msg(replied_username, msg) {
 
    return [msg_filtered, is_reply_message]
 }
+// Author is streamer?
 function is_user_the_streamer(msg_author, streamer_username) {
    let is_streamer
    if (msg_author.toLowerCase() == streamer_username) {
