@@ -11,45 +11,15 @@
 </head>
 <body>
    <div class='sidebar'>
-      <div class='sidebar-item' onclick="clickedSidebarItem('sidebar-settings-box')" title='Settings'>
+      <div class='sidebar-item sidebar-button-settings' onclick="clickedSidebarItem('settings')" title='Settings'>
          <img src='assets/sidebar/setting.png'>
       </div>
-      <div class='sidebar-item' onclick="clickedSidebarItem('sidebar-information-box')" title='Chat informations'>
+      <div class='sidebar-item sidebar-button-chat-information' onclick="clickedSidebarItem('chat-information')" title='Chat informations'>
          <img src='assets/sidebar/information.png'>
       </div>
-      <script>
-         let isOpened = []
-         function clickedSidebarItem(item) {
-            if (isOpened.length == 0) {
-               const settings_item = document.getElementById(item)
-               settings_item.style.display = 'block'
-               isOpened.push(item)
-            } else {
-               let is_open_box_closed 
-               isOpened.forEach(element => {
-                  if (element == item) {
-                     const settings_item = document.getElementById(item)
-                     settings_item.style.display = 'none'
-                     let remove_item_index = isOpened.indexOf(item)
-                     isOpened.splice(remove_item_index, 1)
-                     is_open_box_closed = true
-                  }
-                  let remove_item_index = isOpened.indexOf(element)
-                  isOpened.splice(remove_item_index, 1)
-                  const settings_item = document.getElementById(element)
-                  settings_item.style.display = 'none'
-               });
-               if (is_open_box_closed != true) {
-                  const settings_item = document.getElementById(item)
-                  settings_item.style.display = 'block'
-                  isOpened.push(item)
-               }
-            }
-         }
-      </script>
       <a class='sidebar-text' href='https://github.com/encoderpie/twitch-chat-tmijs'>DEVELOPED BY ENCODERPIE</a>
    </div>
-   <div id='sidebar-settings-box' class='sidebar-boxs' style="display: none;">
+   <div class='sidebar-boxs sidebar-box-settings' style="display: none;">
       <div class='setting-item'>
          <p>CHAT SETTINGS</p>
          <table>
@@ -69,33 +39,27 @@
       </div>
       <button onclick='resetChatSettings()' class='reset-settings'>RESET SETTINGS</button>
    </div>
-   <div id='sidebar-information-box' class='sidebar-boxs' style="display: none;">
+   <div class='sidebar-boxs sidebar-box-chat-information' style="display: none;">
       <div class='setting-item'>
          <p>CHAT INFORMATION</p>
-         <table id='chat-informations'>
-            <tr>
-               <td>Emote only</th>
-               <td id='data-emote-only'>Loading...</th>
-            </tr>
-            <tr>
-               <td>Subs only</th>
-               <td id='data-subs-only'>Loading...</th>
-            </tr>
-            <tr>
-               <td>Slow</th>
-               <td id='data-slow'>Loading...</th>
-            </tr>
-            <tr>
-               <td>Followers only</th>
-               <td id='data-followers-only'>Loading...</th>
-            </tr>
-            <tr>
-               <td>Channel ID</th>
-               <td id='data-channel-id'>Loading...</th>
-            </tr>
-         </table>
+         <table id='chat-informations'><tr><td>Data will be updated when message is sent to chat</td></tr></table>
       </div>
    </div>
+   <script>
+      function clickedSidebarItem(item, button_item) {
+         const box = document.querySelector(`.sidebar-box-${item}`)
+         const button = document.querySelector(`.sidebar-button-${item}`)
+         box.style.display = 'block'
+         document.addEventListener('click', e => {
+            if (
+               !e.composedPath().includes(box) &&
+               !e.composedPath().includes(button)
+            ) {
+               box.style.display = 'none'
+            }
+         })
+      }
+   </script>
    <div id='chat'></div>
    <script src="chat.js"></script>
 </body>

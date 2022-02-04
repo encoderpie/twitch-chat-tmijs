@@ -1,6 +1,6 @@
 // Config - Settings
 const config = {
-   'channel_name': 'coderraenn',
+   'channel_name': 'elraenn',
    'chat_messages_limit': 100,
    'assets_dir': 'assets'
 }
@@ -201,25 +201,29 @@ client.on('roomstate', (channel, state) => {
 // Information functions
 function updateInformation() {
    const channel = client.channels[0]
-   let emoteonly = document.getElementById('data-emote-only')
-   let subsonly = document.getElementById('data-subs-only')
-   let slow = document.getElementById('data-slow')
-   let followersonly = document.getElementById('data-followers-only')
-   let channelid = document.getElementById('data-channel-id')
-   const rs = roomstate.get(channel);
+   const rs = roomstate.get(channel)
+   $("#chat-informations tr").remove()
    if(roomstate.has(channel)) {
-      emoteonly.innerText = rs['emote-only'] ? 'Enabled' : 'Disabled'
-      subsonly.innerText = rs['subs-only'] ? 'Enabled' : 'Disabled'
-      slow.innerText = rs['slow'] ? rs['slow'] : 'Disabled'
-      if (rs['followers-only'] == -1) {
-         followersonly.innerText = 'Disabled'
-      } else {
-         followersonly.innerText = 'Enabled'
+      let datas = {
+         'Emote only': rs['emote-only'] ? 'Enabled' : 'Disabled',
+         'Subs only': rs['subs-only'] ? 'Enabled' : 'Disabled',
+         'Followers only': rs['followers-only'] != -1 ? 'Enabled' : 'Disabled',
+         'Slow': rs['slow'] ? rs['slow'] : 'Disabled',
+         'Channel id': rs['room-id']
       }
-      channelid.innerText = rs['room-id']
-   }   
+      const information_table = document.getElementById('chat-informations')
+      for (const [key, value] of Object.entries(datas)) {
+         let table_tr = document.createElement('tr')
+         let table_td_key = document.createElement('td')
+         let table_td_value = document.createElement('td')
+         table_td_key.innerText = key
+         table_tr.appendChild(table_td_key)
+         table_td_value.innerText = value
+         table_tr.appendChild(table_td_value)
+         information_table.appendChild(table_tr)
+      }
+   }
 }
-updateInformation()
 client.connect().catch(console.error);
 // System Information
 client.on('connected', () => {
@@ -249,15 +253,15 @@ client.on('emoteonly', (channel, enabled) => {
    }
 })
 client.on('ban', (channel, username, reason, userstate) => {
-   let reason_filtered = ""
+   let reason_filtered = ''
    if (reason != null) {
       reason_filtered = `reason: ${reason}`
    }
    sendNodeMessage('systemmessage', `${username}'s banned! ${reason_filtered}`)
 })
 client.on('timeout', (channel, username, reason, duration, userstate) => {
-   let duration_filtered = ""
-   let reason_filtered = ""
+   let duration_filtered = ''
+   let reason_filtered = ''
    if (duration != null) {
       duration_filtered = `duration: ${duration}`
    }
