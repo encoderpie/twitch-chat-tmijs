@@ -303,6 +303,62 @@ client.on('slowmode', (channel, enabled, length) => {
    }
    updateInformation()
 })
+// Hosts Logs
+let colorOrderLogElements = 0
+function createLogElement(text, logId) {
+   let logArea = document.getElementById(logId)
+   const isScrolledToBottom = logArea.scrollHeight - logArea.clientHeight <= logArea.scrollTop + 1
+   let element = document.createElement('p')
+   element.innerText = text
+   element.className = 'log-element'
+   let bgcolor
+   if (colorOrderLogElements == 0) {
+      bgcolor = config_colors['primary_node_color']
+      colorOrderLogElements = 1
+   } else {
+      bgcolor = config_colors['secondary_node_color']
+      colorOrderLogElements = 0
+   }
+   element.style.backgroundColor = bgcolor
+   logArea.appendChild(element)
+   if (isScrolledToBottom) {
+      logArea.scrollTop = logArea.scrollHeight - logArea.clientHeight
+   }
+}
+const hostsLogsId = 'host-logs-area'
+client.on('hosted', (channel, username, viewers, autohost) => {
+   let autohostText = ''
+   if (autohost) { autohostText = 'Is autohost.' }
+   let element = createLogElement(`Hosting to ${username}, ${viewers} viewer. ${autohostText}`, hostsLogsId)
+})
+client.on('hosting', (channel, target, viewers) => {
+   let element = createLogElement(`Hosting to ${target}, ${viewers} viewer.`, hostsLogsId)
+})
+client.on('raided', (channel, username, viewers) => {
+   let element = createLogElement(`Raided to ${username}, ${viewers} viewer.`, hostsLogsId)
+})
+// Subs Logs
+const subsLogsId = 'sub-logs-area'
+client.on('submysterygift', (channel, username, numbOfSubs, methods, userstate) => {
+   let element = createLogElement(`${username}, gifting ${numbOfSubs} subscriptions!`, subsLogsId)
+})
+client.on('subgift', (channel, username, streakMonths, recipient, methods, tags) => {
+   let element = createLogElement(`${username}, gifted subscriptions to ${recipient}`, subsLogsId)
+});
+client.on('subscription', (channel, username, methods, message, userstate) => {
+   let element = createLogElement(`${userstate['display-name']} has just subscribed!`, subsLogsId)
+})
+client.on('resub', (channel, username, months, message, userstate, methods) => {
+   const month = userstate['msg-param-streak-months']
+   //sometimes months returning null or true not number
+   let monthNum
+   if (month === undefined || month === true) {
+      monthNum = userstate['msg-param-cumulative-months']
+   } else {
+      monthNum = month
+   }
+   let element = createLogElement(`${userstate['display-name']} has subscribed for ${monthNum} months in a row!`, subsLogsId)
+})
 // Reply message filter
 function reply_filter_msg(replied_username, msg) {
    let is_reply_message

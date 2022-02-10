@@ -32,7 +32,9 @@ const config_colors = {
 - [x] Show replied messages
 - [x] Sidebar
 - [x] Settings
-- [ ] Show logs (subscribers, gifts, hosts)
+- [x] Show logs (subscribers, resubs, gifts, hosts)
 
 ### Contact
-Bug reports and feedback for: Discord Server & Discord Username: discord.com/invite/Rnny2wF9MD & encoderpie#3312
+Bug reports and feedback for:
+Discord server: discord.com/invite/Rnny2wF9MD
+Discord username: encoderpie#3312
