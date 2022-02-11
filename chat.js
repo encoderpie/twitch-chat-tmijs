@@ -186,8 +186,16 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
    textNode_message.className = 'chat-node-message'
    node.appendChild(textNode_message)
    chat.appendChild(node)
+   let followChat = document.getElementById('followChat')
    if (isScrolledToBottom) {
       chat.scrollTop = chat.scrollHeight - chat.clientHeight
+      followChat.style.display = 'none'
+   } else {
+      followChat.style.display = 'block'
+      followChat.onclick = function() {
+         followChat.style.display = 'none'
+         chat.scrollTop = chat.scrollHeight - chat.clientHeight
+      }
    }
 }
 // Tmi - Twitch connection

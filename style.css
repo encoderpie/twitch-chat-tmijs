@@ -6,12 +6,17 @@ body {
    margin: 0;
 }
 
+:root {
+   --log-panels-height: 50vh;
+   --chat-width: 400px;
+}
+
 * {
    color: white;
 }
 
 ::-webkit-scrollbar {
-   width: 9px;
+   width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -20,7 +25,6 @@ body {
 
 ::-webkit-scrollbar-thumb {
    background-clip: content-box;
-	border: 3px solid transparent;
    color: rgb(37, 37, 37);
 	border-radius: 7px;
 	box-shadow: inset 0 0 0 10px;
@@ -126,10 +130,6 @@ body {
 }
 
 /* PANELS */
-:root {
-   --log-panels-height: 50vh;
-}
-
 .log-panels {
    width: 350px;
    background-color: rgb(15, 15, 15);
@@ -176,7 +176,7 @@ body {
 }
 
 #chat {
-   width: 400px;
+   width: var(--chat-width);
    max-height: 100vh;
    float: right;
    overflow-x: hidden;
@@ -249,4 +249,26 @@ body {
    text-overflow: ellipsis; 
    white-space: nowrap; 
    overflow: hidden;
+}
+
+.follow-chat {
+   display: none;
+   position: fixed;
+   z-index: 100;
+   bottom: 0;
+   right: 0;
+   overflow: auto;
+   cursor: pointer;
+   opacity: 0.9;
+   width: var(--chat-width);
+}
+
+.follow-chat p {
+   background-color: black;
+   margin: 0px 0px 20px calc(var(--chat-width) / 3);
+   color: white;
+   text-align: center;
+   width: calc(var(--chat-width) / 3);
+   border-radius: 3px;
+   border: 2px solid rgb(29, 29, 29);
 }
