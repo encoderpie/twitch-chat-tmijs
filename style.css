@@ -126,14 +126,18 @@ body {
 }
 
 /* PANELS */
+:root {
+   --log-panels-height: 50vh;
+}
+
 .log-panels {
    width: 350px;
    background-color: rgb(15, 15, 15);
    float: left;
    margin: 5px 0px 0px 5px;
    overflow: hidden;
-   height: 50vh;
-   position:relative; 
+   min-height: var(--log-panels-height);
+   position: relative; 
 }
 
 .log-panels-title {
@@ -160,8 +164,9 @@ body {
 
 .logs-area {
    overflow-x: hidden;
-   max-height: 100vh;
+   max-height: calc(var(--log-panels-height) - 6vh);
    bottom: 0px;
+   margin-top: 36px;
 }
 
 .log-element {

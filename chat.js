@@ -329,24 +329,24 @@ const hostsLogsId = 'host-logs-area'
 client.on('hosted', (channel, username, viewers, autohost) => {
    let autohostText = ''
    if (autohost) { autohostText = 'Is autohost.' }
-   let element = createLogElement(`Hosting to ${username}, ${viewers} viewer. ${autohostText}`, hostsLogsId)
+   createLogElement(`Hosting to ${username}, ${viewers} viewer. ${autohostText}`, hostsLogsId)
 })
 client.on('hosting', (channel, target, viewers) => {
-   let element = createLogElement(`Hosting to ${target}, ${viewers} viewer.`, hostsLogsId)
+   createLogElement(`Hosting to ${target}, ${viewers} viewer.`, hostsLogsId)
 })
 client.on('raided', (channel, username, viewers) => {
-   let element = createLogElement(`Raided to ${username}, ${viewers} viewer.`, hostsLogsId)
+   createLogElement(`Raided to ${username}, ${viewers} viewer.`, hostsLogsId)
 })
 // Subs Logs
 const subsLogsId = 'sub-logs-area'
 client.on('submysterygift', (channel, username, numbOfSubs, methods, userstate) => {
-   let element = createLogElement(`${username}, gifting ${numbOfSubs} subscriptions!`, subsLogsId)
+   createLogElement(`${username}, gifting ${numbOfSubs} subscriptions!`, subsLogsId)
 })
 client.on('subgift', (channel, username, streakMonths, recipient, methods, tags) => {
-   let element = createLogElement(`${username}, gifted subscriptions to ${recipient}`, subsLogsId)
+   createLogElement(`${username}, gifted subscriptions to ${recipient}`, subsLogsId)
 });
 client.on('subscription', (channel, username, methods, message, userstate) => {
-   let element = createLogElement(`${userstate['display-name']} has just subscribed!`, subsLogsId)
+   createLogElement(`${userstate['display-name']} has just subscribed!`, subsLogsId)
 })
 client.on('resub', (channel, username, months, message, userstate, methods) => {
    const month = userstate['msg-param-streak-months']
@@ -357,7 +357,7 @@ client.on('resub', (channel, username, months, message, userstate, methods) => {
    } else {
       monthNum = month
    }
-   let element = createLogElement(`${userstate['display-name']} has subscribed for ${monthNum} months in a row!`, subsLogsId)
+   createLogElement(`${userstate['display-name']} has subscribed for ${monthNum} months in a row!`, subsLogsId)
 })
 // Reply message filter
 function reply_filter_msg(replied_username, msg) {
