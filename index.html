@@ -17,7 +17,7 @@
       <div class='sidebar-item sidebar-button-chat-information' onclick="clickedSidebarItem('chat-information')" title='Chat informations'>
          <img src='assets/sidebar/information.png'>
       </div>
-      <a class='sidebar-text' href='https://github.com/encoderpie/twitch-chat-tmijs'>DEVELOPED BY ENCODERPIE</a>
+      <a class='sidebar-text' target='_blank' href='https://github.com/encoderpie/twitch-chat-tmijs'>DEVELOPED BY ENCODERPIE</a>
    </div>
    <div class='sidebar-boxs sidebar-box-settings' style="display: none;">
       <div class='setting-item'>
@@ -25,19 +25,18 @@
          <table>
             <tr>
                <td>Show time?</th>
-               <td><input type="checkbox" onclick="sidebarItemCheckboxClicked('show-time')" id='show-time'></th>
+               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-time')" id='show-time'></th>
             </tr>
             <tr>
                <td>Show badges?</th>
-               <td><input type="checkbox" onclick="sidebarItemCheckboxClicked('show-badges')" id='show-badges'></th>
+               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-badges')" id='show-badges'></th>
             </tr>
             <tr>
                <td>Author colors single color?</th>
-               <td><input type="checkbox" onclick="sidebarItemCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></th>
+               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></th>
             </tr>
          </table>
       </div>
-      <button onclick='resetChatSettings()' class='reset-settings'>RESET SETTINGS</button>
    </div>
    <div class='sidebar-boxs sidebar-box-chat-information' style="display: none;">
       <div class='setting-item'>

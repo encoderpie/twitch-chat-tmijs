@@ -111,24 +111,6 @@ body {
    margin: 4px -2px 0px 10px;
 }
 
-.reset-settings {
-   margin: 10px 0px 0px 0px;
-   color: rgb(223, 223, 223);
-   float: right;
-   font-size: 11px;
-   letter-spacing: 2px;
-   background-color: transparent;
-   border: #252525 solid 1px;
-   box-shadow: rgb(29, 29, 29) 0px 0px 7px 2px;
-   border-radius: 2px;
-   padding: 3px 5px;
-   cursor: pointer;
-}
-
-.reset-settings:hover {
-   background-color: rgb(29, 29, 29);
-}
-
 /* PANELS */
 .log-panels {
    width: 350px;

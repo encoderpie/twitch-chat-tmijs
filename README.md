@@ -1,6 +1,9 @@
 # twitch-chat-tmijs
 tmi.js twitch chat web app
 
+### Demo
+[Click for demo](https://encoderpie.github.io/twitch-chat-tmijs/)
+
 ### Installation - Clone repo
 ```
 git clone https://github.com/encoderpie/twitch-chat-tmijs.git
@@ -33,7 +36,7 @@ const config_colors = {
 - [x] Sidebar
 - [x] Settings
 - [x] Show logs (subscribers, resubs, gifts, hosts)
-- [x] 'Follow the chat' button
+- [x] Cookie system for chat settings
 
 ### Contact
 Bug reports and feedback for:

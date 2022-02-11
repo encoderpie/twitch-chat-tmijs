@@ -21,54 +21,46 @@ function getCurrentTime() {
    return currentTimeCombined
 }
 // Chat settings
-let chat_settings = []
-function resetChatSettings() {
-   let default_settings = ['show-time', 'show-badges']
-   let setting_item
-   let setting_item_index
-   if (chat_settings.length == 0) {
-      default_settings.forEach(element => {
-         setting_item = document.getElementById(element)
-         setting_item.checked = true
-      });
-   } else {
-      chat_settings.forEach(element => {
-         setting_item = document.getElementById(element)
-         setting_item_index = default_settings.indexOf(element)
-         if (setting_item_index != -1) {
-            setting_item.checked = true
-         } else {
-            setting_item.checked = false
-         }
-      });
-   }
-   chat_settings = default_settings
-}
-resetChatSettings()
-function sidebarItemCheckboxClicked(item) {
-   const setting_item = document.getElementById(item)
-   if (setting_item.checked) {
-      chat_settings.push(item)
-      sendNodeMessage('systemmessage', `${item} setting turned on!`)
-   } else {
-      let remove_item_index = chat_settings.indexOf(item)
-      if (remove_item_index != -1) {
-         chat_settings.splice(remove_item_index, 1)
-         sendNodeMessage('systemmessage', `${item} setting turned off.`)
+function getCookie(cname) {
+   let name = cname + '='
+   let decodedCookie = decodeURIComponent(document.cookie)
+   let ca = decodedCookie.split(';')
+   for(let i = 0; i <ca.length; i++) {
+      let c = ca[i]
+      while (c.charAt(0) == ' ') {
+         c = c.substring(1)
+      }
+      if (c.indexOf(name) == 0) {
+         return c.substring(name.length, c.length)
       }
    }
+   return ''
 }
-// Function to implement chat settings
-function setting_activated(setting, if_there_is, if_not) {
-   let response
-   let setting_index = chat_settings.indexOf(setting)
-   if (setting_index != -1) {
-      response = if_there_is
+function checkSettingsInCookies(cookieName, isTrue, isFalse) {
+   let element = getCookie(cookieName)
+   if (element == 'true') { return isTrue } else { return isFalse }
+}
+function setCookie(cookieName, value) {
+   document.cookie = `${cookieName}=${value}`
+}
+function chatSettingCheckboxClicked(item) {
+   const setting_item = document.getElementById(item)
+   if (setting_item.checked) {
+      sendNodeMessage('systemmessage', `${item} setting turned on!`)
+      setCookie(item, true)
    } else {
-      response = if_not
+      sendNodeMessage('systemmessage', `${item} setting turned off.`)
+      setCookie(item, false)
    }
-   return response
 }
+let settings_names = ['show-time', 'show-badges', 'author_colors_single_color']
+settings_names.forEach(element => {
+   let setting = getCookie(element)
+   if (setting == 'true') {
+      let x = document.getElementById(element)
+      x.checked = true
+   }
+})
 // Send chat message function
 let maxNodeLimit = config['chat_messages_limit'],
    msgAuthorDefaultColor = config['message_author_default_color'],
@@ -78,7 +70,7 @@ let maxNodeLimit = config['chat_messages_limit'],
 function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg) {
    const isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1
    const node = document.createElement('div')
-   
+   if (type != 'systemmessage') {updateInformation()}
    // Node Limit
    whichNodeCounter += 1
    node.setAttribute('which-node', whichNodeCounter)
@@ -119,7 +111,7 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
       node.appendChild(replied)
    }
    // Time
-   let show_time = setting_activated('show-time', true, false)
+   let show_time = checkSettingsInCookies('show-time', true, false)
    const textNode_time = document.createElement('div')
    if (show_time == true) {
       textNode_time.innerText = getCurrentTime()
@@ -159,7 +151,7 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
                }
             }
          }
-         let show_badges = setting_activated('show-badges', true, false)
+         let show_badges = checkSettingsInCookies('show-badges', true, false)
          if (badge_img.hasAttribute('src') && show_badges) {
             node.appendChild(badge_img)
          }
@@ -168,7 +160,7 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
    // Author
    if (type != 'systemmessage') {
       textNode_author = document.createElement('div')
-      msg_author_color = setting_activated('author_colors_single_color', config_colors['message_author_default_color'], user['color'])
+      msg_author_color = checkSettingsInCookies('author_colors_single_color', config_colors['message_author_default_color'], user['color'])
       textNode_author.style.color = msg_author_color
    }
    // Setting InnerText - ClassName - AppendChild's
@@ -269,7 +261,6 @@ client.on('emoteonly', (channel, enabled) => {
    } else {
       sendNodeMessage('systemmessage', 'Emote only is no longer on.')
    }
-   updateInformation()
 })
 client.on('ban', (channel, username, reason, userstate) => {
    let reason_filtered = ''
@@ -295,7 +286,6 @@ client.on('followersonly', (channel, enabled, length) => {
    } else {
       sendNodeMessage('systemmessage', 'Followers only is no longer on.')
    }
-   updateInformation()
 })
 client.on('mod', (channel, username) => {
    sendNodeMessage('systemmessage', `${username}'s modded!`)
@@ -309,7 +299,6 @@ client.on('slowmode', (channel, enabled, length) => {
    } else {
       sendNodeMessage('systemmessage', 'Slowmode only is no longer on.')
    }
-   updateInformation()
 })
 // Hosts Logs
 let colorOrderLogElements = 0
@@ -407,6 +396,5 @@ client.on('message', (channel, user, msg, self) => {
    let msg_filtered = reply_filter_data[0],
       is_reply_message = reply_filter_data[1]
    let is_streamer = is_user_the_streamer(msg_author, streamer_username)
-   updateInformation()
    sendNodeMessage('chatmessage', msg_filtered, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg)
 })
