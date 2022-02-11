@@ -33,7 +33,7 @@ const config_colors = {
 - [x] Sidebar
 - [x] Settings
 - [x] Show logs (subscribers, resubs, gifts, hosts)
-- [x] Auto scroll control stopped in chat - follow the chat
+- [x] 'Follow the chat' button
 
 ### Contact
 Bug reports and feedback for:
