@@ -16,7 +16,7 @@ Configs:
 ```
 const config = {
    'channel_name': 'channel_name',
-   'chat_messages_limit': 100, // Maximum number of messages to be shown in chat
+   'chat_messages_limit_default': 200, // Maximum number of messages to be shown in chat. User can change it from within the site if he/she wants
    'assets_dir': 'assets' // Filename with assets
 }
 

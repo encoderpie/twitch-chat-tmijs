@@ -1,6 +1,6 @@
 // Config settings
 const config = {
-   'channel_name': 'rraenee',
+   'channel_name': 'pqueen',
    'chat_messages_limit_default': 200,
    'assets_dir': 'assets',
 }
@@ -59,18 +59,24 @@ settings_names.forEach(element => {
 })
 let maxNodeLimit
 let chatMessageLimitCookie = getCookie('chat-message-limit')
-let chatSettingMessageLimitElement = document.getElementById('chat-message-limit')
+let chatMessageLimitElement = document.getElementById('chat-message-limit')
 if (chatMessageLimitCookie) {
    maxNodeLimit = chatMessageLimitCookie
 } else {
    maxNodeLimit = config['chat_messages_limit_default']
 }
-chatSettingMessageLimitElement.setAttribute('value', maxNodeLimit)
-function chatSettingsTextBox(item) {
-   let setting_item_value = parseInt(document.getElementById(item).value)
-   maxNodeLimit = setting_item_value
-   setCookie(item, setting_item_value)
-   sendNodeMessage('systemmessage', `Maximum message limit set to ${setting_item_value}.`)
+chatMessageLimitElement.setAttribute('value', maxNodeLimit)
+function chatSettingsMessageLimit(item) {
+   let item_value = parseInt(document.getElementById(item).value)
+   let message
+   if (maxNodeLimit == item_value) {
+      message = `Maximum message limit already set to ${item_value}.`
+   } else {
+      maxNodeLimit = item_value
+      setCookie(item, item_value)
+      message = `Maximum message limit set to ${item_value}.`
+   }
+   sendNodeMessage('systemmessage', message)
 }
 // Send chat message function
 let msgAuthorDefaultColor = config['message_author_default_color'],
@@ -80,7 +86,6 @@ let msgAuthorDefaultColor = config['message_author_default_color'],
    lostMessages = 0
 function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg) {
    const isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1
-   console.log(maxNodeLimit)
    const node = document.createElement('div')
    if (type != 'systemmessage') {updateInformation()}
    // Node Limit
