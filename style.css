@@ -78,7 +78,7 @@ body {
    background-color: rgb(20, 20, 20);
    border-radius: 5px;
    margin: 10px 0px 0px 60px;
-   width: 290px;
+   width: 430px;
    position: absolute;
    padding: 10px 10px;
    float: left;
@@ -106,9 +106,35 @@ body {
    border: rgb(36, 36, 36) solid 1px;
 }
 
-.sidebar-boxs table td input {
+.setting-item-checkboxs td input {
    cursor: pointer;
-   margin: 4px -2px 0px 10px;
+   margin: 4px -13px 0px 10px;
+}
+
+.chat-settings-text-input {
+   margin: 0px 10px 0px -11px;
+}
+
+.chat-settings-text-input input {
+   float: right;
+   font-size: 12px;
+   background-color: rgb(12, 12, 12);
+   border: blue solid 1px;
+   border-radius: 3px;
+   cursor: pointer;
+   padding: 1.5px 4px;
+}
+
+.chat-settings-number-input {
+   width: 50%;
+   margin-right: 5px;
+   font-size: 13px;
+   padding: 1px 4px;
+}
+
+.chat-settings-button-input {
+   width: 30%;
+   font-size: 12px;
 }
 
 /* PANELS */
@@ -157,6 +183,7 @@ body {
    border-radius: 3px;
 }
 
+/* CHAT */
 #chat {
    width: var(--chat-width);
    max-height: 100vh;
@@ -180,6 +207,7 @@ body {
    padding: 4px 7px;
    margin: 4px 4px 4px 5px;
    box-shadow: rgb(15, 15, 15) 0px 0px 5px 1px;
+   transition: 1s;
 }
 
 .chat-node-time {
@@ -247,8 +275,10 @@ body {
 
 .follow-chat p {
    background-color: black;
-   margin: 0px 0px 20px calc(var(--chat-width) / 3);
+   margin: 0px 0px 20px calc(var(--chat-width) / 3 - 2px);
    color: white;
+   font-size: 13px;
+   padding: 2px 3px;
    text-align: center;
    width: calc(var(--chat-width) / 3);
    border-radius: 3px;

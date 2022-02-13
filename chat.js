@@ -1,7 +1,7 @@
 // Config settings
 const config = {
-   'channel_name': 'elraenn',
-   'chat_messages_limit': 100,
+   'channel_name': 'rraenee',
+   'chat_messages_limit_default': 200,
    'assets_dir': 'assets',
 }
 const config_colors = {
@@ -20,7 +20,7 @@ function getCurrentTime() {
    let currentTimeCombined = `${currentHour}:${currentMinute}`
    return currentTimeCombined
 }
-// Chat settings
+// Chat settings - Cookies
 function getCookie(cname) {
    let name = cname + '='
    let decodedCookie = decodeURIComponent(document.cookie)
@@ -35,10 +35,6 @@ function getCookie(cname) {
       }
    }
    return ''
-}
-function checkSettingsInCookies(cookieName, isTrue, isFalse) {
-   let element = getCookie(cookieName)
-   if (element == 'true') { return isTrue } else { return isFalse }
 }
 function setCookie(cookieName, value) {
    document.cookie = `${cookieName}=${value}`
@@ -61,14 +57,30 @@ settings_names.forEach(element => {
       x.checked = true
    }
 })
+let maxNodeLimit
+let chatMessageLimitCookie = getCookie('chat-message-limit')
+let chatSettingMessageLimitElement = document.getElementById('chat-message-limit')
+if (chatMessageLimitCookie) {
+   maxNodeLimit = chatMessageLimitCookie
+} else {
+   maxNodeLimit = config['chat_messages_limit_default']
+}
+chatSettingMessageLimitElement.setAttribute('value', maxNodeLimit)
+function chatSettingsTextBox(item) {
+   let setting_item_value = parseInt(document.getElementById(item).value)
+   maxNodeLimit = setting_item_value
+   setCookie(item, setting_item_value)
+   sendNodeMessage('systemmessage', `Maximum message limit set to ${setting_item_value}.`)
+}
 // Send chat message function
-let maxNodeLimit = config['chat_messages_limit'],
-   msgAuthorDefaultColor = config['message_author_default_color'],
+let msgAuthorDefaultColor = config['message_author_default_color'],
    whichNodeCounter = 0,
    deletedNodeCounter = 0,
    colorOrder = 0
+   lostMessages = 0
 function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg) {
    const isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1
+   console.log(maxNodeLimit)
    const node = document.createElement('div')
    if (type != 'systemmessage') {updateInformation()}
    // Node Limit
@@ -111,9 +123,9 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
       node.appendChild(replied)
    }
    // Time
-   let show_time = checkSettingsInCookies('show-time', true, false)
+   let show_time = getCookie('show-time')
    const textNode_time = document.createElement('div')
-   if (show_time == true) {
+   if (show_time == 'true') {
       textNode_time.innerText = getCurrentTime()
       textNode_time.className = 'chat-node-time'
       node.appendChild(textNode_time)
@@ -151,8 +163,8 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
                }
             }
          }
-         let show_badges = checkSettingsInCookies('show-badges', true, false)
-         if (badge_img.hasAttribute('src') && show_badges) {
+         let show_badges = getCookie('show-badges')
+         if (badge_img.hasAttribute('src') && show_badges == 'true') {
             node.appendChild(badge_img)
          }
       }
@@ -160,7 +172,12 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
    // Author
    if (type != 'systemmessage') {
       textNode_author = document.createElement('div')
-      msg_author_color = checkSettingsInCookies('author_colors_single_color', config_colors['message_author_default_color'], user['color'])
+      let authorColorsSingleColor = getCookie('author_colors_single_color')
+      if (authorColorsSingleColor == 'true') {
+         msg_author_color = config_colors['message_author_default_color']
+      } else {
+         msg_author_color = user['color']
+      }
       textNode_author.style.color = msg_author_color
    }
    // Setting InnerText - ClassName - AppendChild's
@@ -179,12 +196,17 @@ function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge
    node.appendChild(textNode_message)
    chat.appendChild(node)
    let followChat = document.getElementById('followChat')
+   let followChatInnerText = document.getElementById('followChatInnerText')
    if (isScrolledToBottom) {
       chat.scrollTop = chat.scrollHeight - chat.clientHeight
       followChat.style.display = 'none'
+      lostMessages = 0
    } else {
       followChat.style.display = 'block'
+      lostMessages = lostMessages + 1
+      followChatInnerText.innerText = `Follow the chat (${lostMessages})`
       followChat.onclick = function() {
+         lostMessages = 0
          followChat.style.display = 'none'
          chat.scrollTop = chat.scrollHeight - chat.clientHeight
       }

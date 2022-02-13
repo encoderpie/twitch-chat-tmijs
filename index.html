@@ -22,18 +22,29 @@
    <div class='sidebar-boxs sidebar-box-settings' style="display: none;">
       <div class='setting-item'>
          <p>CHAT SETTINGS</p>
+         <table class='setting-item-checkboxs'>
+            <tr>
+               <td>Show time?</td>
+               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-time')" id='show-time'></td>
+            </tr>
+            <tr>
+               <td>Show badges?</td>
+               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-badges')" id='show-badges'></td>
+            </tr>
+            <tr>
+               <td>Author colors single color?</td>
+               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></td>
+            </tr>
+         </table>
          <table>
             <tr>
-               <td>Show time?</th>
-               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-time')" id='show-time'></th>
-            </tr>
-            <tr>
-               <td>Show badges?</th>
-               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-badges')" id='show-badges'></th>
-            </tr>
-            <tr>
-               <td>Author colors single color?</th>
-               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></th>
+               <td>Maximum number of messages to show in chat</td>
+               <td>
+                  <div class='chat-settings-text-input'>
+                     <input type='button' class='chat-settings-button-input' value='Apply' onclick="chatSettingsTextBox('chat-message-limit')"/>
+                     <input type='number' class='chat-settings-number-input' id='chat-message-limit'/>
+                  </div>
+               </td>
             </tr>
          </table>
       </div>
@@ -68,8 +79,8 @@
       <div id='host-logs-area' class='logs-area'></div>
    </div>
    <div class='chat-box'>
-      <div id="followChat" class="follow-chat">
-         <p>Follow the chat</p>
+      <div id='followChat' class="follow-chat">
+         <p id='followChatInnerText'>Follow the chat</p>
       </div>
       <div id='chat'></div>
    </div>
