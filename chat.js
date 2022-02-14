@@ -1,6 +1,6 @@
 // Config settings
 const config = {
-   'channel_name': 'pqueen',
+   'channel_name': 'Fextralife',
    'chat_messages_limit_default': 200,
    'assets_dir': 'assets',
 }
@@ -82,7 +82,7 @@ function chatSettingsMessageLimit(item) {
 let msgAuthorDefaultColor = config['message_author_default_color'],
    whichNodeCounter = 0,
    deletedNodeCounter = 0,
-   colorOrder = 0
+   colorOrder = 0,
    lostMessages = 0
 function sendNodeMessage(type, msg, msg_author, is_streamer, user, badges, badge_info, is_reply_message, replied_user, replied_msg) {
    const isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1
@@ -334,7 +334,7 @@ function createLogElement(text, logId) {
    const isScrolledToBottom = logArea.scrollHeight - logArea.clientHeight <= logArea.scrollTop + 1
    let element = document.createElement('p')
    element.innerText = text
-   element.className = 'log-element'
+   element.className = 'log-node'
    let bgcolor
    if (colorOrderLogElements == 0) {
       bgcolor = config_colors['primary_node_color']

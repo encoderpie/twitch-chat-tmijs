@@ -1,0 +1,89 @@
+#chat {
+   width: var(--chat-width);
+   max-height: 100vh;
+   float: right;
+   overflow-x: hidden;
+   bottom: 0px;
+}
+
+.chat-node {
+   border-radius: 5px;
+   padding: 4px 7px;
+   margin: 4px 4px 4px 5px;
+   box-shadow: rgb(15, 15, 15) 0px 0px 5px 1px;
+}
+
+.chat-node-time {
+   float: left;
+   margin: 3.4px 5px 0px 0px;
+   font-size: 13px;
+   color: rgb(161, 163, 162);
+}
+
+.chat-node-author {
+   float: left;
+}
+
+.chat-node-message {
+   font-size: 16px;
+}
+
+.chat-node-system-message {
+   border: #2E2EFF solid 2px;
+}
+
+.badge {
+	float: left;
+   margin: 2px 3.5px 0px 0px; 
+}
+
+.badge-sub {
+   height: 18px;
+   cursor: pointer;
+}
+
+.replied-msg-container {
+   margin: 3px 0px -21px 0px;
+   cursor: pointer;
+}
+
+.replied-msg-container img {
+   height: 16px;
+   float: left;
+   opacity: 0.5;
+   margin-right: 3px;
+   margin-top: 2px;
+}
+
+.replied-msg-container p {
+   margin: -3px 0px 0px 0px;
+   opacity: 0.5;
+   font-size: 13px;
+   text-overflow: ellipsis; 
+   white-space: nowrap; 
+   overflow: hidden;
+}
+
+.follow-chat {
+   display: none;
+   position: fixed;
+   z-index: 100;
+   bottom: 0;
+   right: 0;
+   overflow: auto;
+   cursor: pointer;
+   opacity: 0.9;
+   width: var(--chat-width);
+}
+
+.follow-chat p {
+   background-color: black;
+   margin: 0px 0px 20px calc(var(--chat-width) / 3 - 2px);
+   color: white;
+   font-size: 13px;
+   padding: 2px 3px;
+   text-align: center;
+   width: calc(var(--chat-width) / 3);
+   border-radius: 3px;
+   border: 2px solid rgb(29, 29, 29);
+}

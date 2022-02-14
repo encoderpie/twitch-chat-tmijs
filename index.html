@@ -5,7 +5,10 @@
    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
    <title>Document</title>
-   <link rel='stylesheet' href='style.css'>
+   <link rel='stylesheet' href='styles/style.css'>
+   <link rel='stylesheet' href='styles/chat.css'>
+   <link rel='stylesheet' href='styles/logs.css'>
+   <link rel='stylesheet' href='styles/sidebar.css'>
    <script src='https://github.com/tmijs/tmi.js/releases/download/v1.8.5/tmi.min.js'></script>
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 </head>
@@ -19,41 +22,35 @@
       </div>
       <a class='sidebar-text' target='_blank' href='https://github.com/encoderpie/twitch-chat-tmijs'>DEVELOPED BY ENCODERPIE</a>
    </div>
-   <div class='sidebar-boxs sidebar-box-settings' style="display: none;">
-      <div class='setting-item'>
-         <p>CHAT SETTINGS</p>
-         <table class='setting-item-checkboxs'>
-            <tr>
-               <td>Show time?</td>
-               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-time')" id='show-time'></td>
-            </tr>
-            <tr>
-               <td>Show badges?</td>
-               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-badges')" id='show-badges'></td>
-            </tr>
-            <tr>
-               <td>Author colors single color?</td>
-               <td><input type="checkbox" onclick="chatSettingCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></td>
-            </tr>
-         </table>
-         <table>
-            <tr>
-               <td>Maximum number of messages to show in chat</td>
-               <td>
-                  <div class='chat-settings-text-input'>
-                     <input type='button' class='chat-settings-button-input' value='Apply' onclick="chatSettingsMessageLimit('chat-message-limit')"/>
-                     <input type='number' class='chat-settings-number-input' id='chat-message-limit'/>
-                  </div>
-               </td>
-            </tr>
-         </table>
-      </div>
+   <div class='sidebar-popup sidebar-box-settings' style="display: none;">
+      <p>CHAT SETTINGS</p>
+      <table class='setting-item-checkbox-table'>
+         <tr>
+            <td>Show time?</td>
+            <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-time')" id='show-time'></td>
+         </tr>
+         <tr>
+            <td>Show badges?</td>
+            <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-badges')" id='show-badges'></td>
+         </tr>
+         <tr>
+            <td>Should the author colors be one color?</td>
+            <td><input type="checkbox" onclick="chatSettingCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></td>
+         </tr>
+         <tr>
+            <td>Maximum number of messages to show in chat</td>
+            <td>
+               <div class='chat-settings-input'>
+                  <input type='button' value='Apply' onclick="chatSettingsMessageLimit('chat-message-limit')"/>
+                  <input type='number' id='chat-message-limit'/>
+               </div>
+            </td>
+         </tr>
+      </table>
    </div>
-   <div class='sidebar-boxs sidebar-box-chat-information' style="display: none;">
-      <div class='setting-item'>
-         <p>CHAT INFORMATION</p>
-         <table id='chat-informations'><tr><td>Data will be updated when message is sent to chat</td></tr></table>
-      </div>
+   <div class='sidebar-popup sidebar-box-chat-information' style="display: none;">
+      <p>CHAT INFORMATION</p>
+      <table id='chat-informations'><tr><td>Data will be updated when message is sent to chat</td></tr></table>
    </div>
    <script>
       function clickedSidebarItem(item, button_item) {
@@ -70,13 +67,15 @@
          })
       }
    </script>
-   <div class='log-subs log-panels'>
-      <div class='log-panels-title'>SUBSCRIPTIONS & GIFTS</div>
-      <div id='sub-logs-area' class='logs-area'></div>
-   </div>
-   <div class='log-hosts log-panels'>
-      <div class='log-panels-title'>HOSTS & RAIDS</div>
-      <div id='host-logs-area' class='logs-area'></div>
+   <div class='log-panels-back-box'>
+      <div class='log-subs log-panel'>
+         <div class='log-title'>SUBSCRIPTIONS & GIFTS</div>
+         <div id='sub-logs-area' class='logs-area'></div>
+      </div>
+      <div class='log-hosts log-panel'>
+         <div class='log-title'>HOSTS & RAIDS</div>
+         <div id='host-logs-area' class='logs-area'></div>
+      </div>
    </div>
    <div class='chat-box'>
       <div id='followChat' class="follow-chat">
