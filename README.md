@@ -1,5 +1,5 @@
 # twitch-chat-tmijs
-tmi.js twitch chat web app
+tmi.js twitch chat web app V2
 
 ### Demo
 [Click for demo](https://encoderpie.github.io/twitch-chat-tmijs/)
@@ -15,15 +15,8 @@ Configuration settings are at the top of chat.js
 Configs:
 ```
 const config = {
-   'channel_name': 'channel_name',
-   'chat_messages_limit_default': 200, // Maximum number of messages to be shown in chat. User can change it from within the site if he/she wants
+   'channelname': 'channelname',
    'assets_dir': 'assets' // Filename with assets
-}
-
-const config_colors = {
-   'message_author_default_color': 'white', // If the color of the sender of the message is not set
-   'primary_node_color': '#1b212b',
-   'secondary_node_color': 'rgb(13 13 16)'
 }
 ```
 
@@ -34,9 +27,9 @@ const config_colors = {
 - [x] Auto scroll
 - [x] Show replied messages
 - [x] Sidebar
-- [x] Settings
 - [x] Show logs (subscribers, resubs, gifts, hosts)
-- [x] Cookie system for chat settings
+- [ ] Settings
+- [ ] Cookie system for chat settings
 
 ### Contact
 Bug reports and feedback for:

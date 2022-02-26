@@ -1,88 +1,92 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-   <meta charset='UTF-8'>
-   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-   <title>Document</title>
-   <link rel='stylesheet' href='styles/style.css'>
-   <link rel='stylesheet' href='styles/chat.css'>
-   <link rel='stylesheet' href='styles/logs.css'>
-   <link rel='stylesheet' href='styles/sidebar.css'>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Twitch chat</title>
+   <link rel="stylesheet" href="styles/style.css">
+   <link rel="stylesheet" href="styles/sidebar-menus.css">
    <script src='https://github.com/tmijs/tmi.js/releases/download/v1.8.5/tmi.min.js'></script>
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 <body>
-   <div class='sidebar'>
-      <div class='sidebar-item sidebar-button-settings' onclick="clickedSidebarItem('settings')" title='Settings'>
-         <img src='assets/sidebar/setting.png'>
+   <div class='columns'>
+      <div class='column column-left sidebar'>
+         <ul>
+            <li id='streamer' title='Change channel'><i class='material-icons-outlined'>account_circle</i></li>
+            <li id='chatInfo' title='Chat information'><i class='material-icons-outlined'>info</i></li>
+            <li id='logsSettings' title='Logs settings'><i class='material-icons-outlined'>receipt_long</i></li>
+            <li id='settings' title='Settings'><i class='material-icons-outlined'>settings</i></li>
+            <li id='openPopoutChat' title='Open chat in popout'><i class='material-icons-outlined'>branding_watermark</i></li>
+            <p class='sidebar-bottom-text'>Developed by <a target='_blank' href='https://github.com/encoderpie/twitch-chat-tmijs'>encoderpie</a></p>
+         </ul>
       </div>
-      <div class='sidebar-item sidebar-button-chat-information' onclick="clickedSidebarItem('chat-information')" title='Chat informations'>
-         <img src='assets/sidebar/information.png'>
+      <div class='column column-left' id='menu-box'>
+         <div class='menu-box-header'>
+            <p id='menu-title'></p>
+            <div id='menu-close'><i class='material-icons-outlined'>arrow_back_ios</i></div>
+         </div>
+         <div class='menu-boxes'>
+            <div id='streamer-box' name='Connect to a chat'>
+               This part is currently unavailable
+            </div>
+            <div id='chatInfo-box' name='Chat informations'>
+               <table id='chat-info'>
+                  <tr><td>Data will be updated when message is sent to chat</td></tr>
+               </table>
+            </div>
+            <div id='settings-box' name='Chat settings'>
+               <table>
+                  <tr>
+                     <td>Show time in nodes</td>
+                     <td>X</td>
+                  </tr>
+                  <tr>
+                     <td>Show badges in nodes</td>
+                     <td>X</td>
+                  </tr>
+                  <tr>
+                     <td>Turn off the author/user colors</td>
+                     <td>X</td>
+                  </tr>
+                  <tr>
+                     <td>Max messages to show in chat</td>
+                     <td>X</td>
+                  </tr>
+               </table>
+            </div>
+            <div id='logsSettings-box' name='Logs settings'>
+               This part is currently unavailable
+            </div>
+         </div>
       </div>
-      <a class='sidebar-text' target='_blank' href='https://github.com/encoderpie/twitch-chat-tmijs'>DEVELOPED BY ENCODERPIE</a>
-   </div>
-   <div class='sidebar-popup sidebar-box-settings' style="display: none;">
-      <p>CHAT SETTINGS</p>
-      <table class='setting-item-checkbox-table'>
-         <tr>
-            <td>Show time?</td>
-            <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-time')" id='show-time'></td>
-         </tr>
-         <tr>
-            <td>Show badges?</td>
-            <td><input type="checkbox" onclick="chatSettingCheckboxClicked('show-badges')" id='show-badges'></td>
-         </tr>
-         <tr>
-            <td>Should the author colors be one color?</td>
-            <td><input type="checkbox" onclick="chatSettingCheckboxClicked('author_colors_single_color')" id='author_colors_single_color'></td>
-         </tr>
-         <tr>
-            <td>Maximum number of messages to show in chat</td>
-            <td>
-               <div class='chat-settings-input'>
-                  <input type='button' value='Apply' onclick="chatSettingsMessageLimit('chat-message-limit')"/>
-                  <input type='number' id='chat-message-limit'/>
-               </div>
-            </td>
-         </tr>
-      </table>
-   </div>
-   <div class='sidebar-popup sidebar-box-chat-information' style="display: none;">
-      <p>CHAT INFORMATION</p>
-      <table id='chat-informations'><tr><td>Data will be updated when message is sent to chat</td></tr></table>
-   </div>
-   <script>
-      function clickedSidebarItem(item, button_item) {
-         const box = document.querySelector(`.sidebar-box-${item}`)
-         const button = document.querySelector(`.sidebar-button-${item}`)
-         box.style.display = 'block'
-         document.addEventListener('click', e => {
-            if (
-               !e.composedPath().includes(box) &&
-               !e.composedPath().includes(button)
-            ) {
-               box.style.display = 'none'
-            }
-         })
-      }
-   </script>
-   <div class='log-panels-back-box'>
-      <div class='log-subs log-panel'>
-         <div class='log-title'>SUBSCRIPTIONS & GIFTS</div>
-         <div id='sub-logs-area' class='logs-area'></div>
+      <div class='column column-main'>
+         <div class='logs-column'>
+            <div class='logs-box'>
+               <div class='logs-box-header'>Subscriptions</div>
+               <div id='log-subs'></div>
+            </div>
+            <div class='logs-box'>
+               <div class='logs-box-header'>Sub gifts</div>
+               <div id='log-gifts'></div>
+            </div>
+            <div class='logs-box'>
+               <div class='logs-box-header'>Resubscription</div>
+               <div id='log-resubs'></div>
+            </div>
+            <div class='logs-box'>
+               <div class='logs-box-header'>Hosts & Raids</div>
+               <div id='log-hosts'></div>
+            </div>
+         </div>
       </div>
-      <div class='log-hosts log-panel'>
-         <div class='log-title'>HOSTS & RAIDS</div>
-         <div id='host-logs-area' class='logs-area'></div>
+      <div class='column column-right'>
+         <div id='chat'></div>
       </div>
    </div>
-   <div class='chat-box'>
-      <div id='followChat' class="follow-chat">
-         <p id='followChatInnerText'>Follow the chat</p>
-      </div>
-      <div id='chat'></div>
-   </div>
-   <script src="chat.js"></script>
+   <script src='scripts/tmi.js'></script>
+   <script src='scripts/sidebar.js'></script>
 </body>
 </html>
