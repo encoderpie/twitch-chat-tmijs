@@ -1,5 +1,5 @@
-# twitch-chat-tmijs
-tmi.js twitch chat web app V2
+# twitch-chat-tmijs with Electronjs
+tmi.js twitch chat web app V2 with Electronjs
 
 ### Demo
 [Click for demo](https://encoderpie.github.io/twitch-chat-tmijs/)
@@ -9,8 +9,19 @@ tmi.js twitch chat web app V2
 git clone https://github.com/encoderpie/twitch-chat-tmijs.git
 ```
 
+for electron - desktop app:
+```
+cd twitch-chat-tmijs
+npm i
+```
+
+### Run Electron - Desktop app
+```
+npm start
+```
+
 ### Config - Settings
-Configuration settings are at the top of chat.js
+Configuration settings are at the top of scripts/tmi.js
 
 Configs:
 ```

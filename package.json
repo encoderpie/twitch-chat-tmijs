@@ -1,0 +1,12 @@
+{
+  "name": "tmijs-chat-with-electron",
+  "version": "1.0.0",
+  "main": "electron.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Encoderpie (Kadir)",
+  "devDependencies": {
+    "electron": "^17.1.0"
+  }
+}
