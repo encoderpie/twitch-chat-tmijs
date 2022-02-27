@@ -1,5 +1,5 @@
 // Config - default settings
-const config = {
+let config = {
    'channelname': 'elraenn',
    'assets_dir_name': 'assets'
 }

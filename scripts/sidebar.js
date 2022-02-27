@@ -32,8 +32,3 @@ closeMenu.addEventListener('click',  function() {
    closeAllMenus()
    menu.style.display = 'none'
 })
-
-// let popoutChat = document.getElementById('openPopoutChat')
-// popoutChat.addEventListener('click',  function() {
-//    window.open('/', '_blank', 'width=400, height=400')
-// })

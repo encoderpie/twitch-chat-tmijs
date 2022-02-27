@@ -15,20 +15,20 @@ cd twitch-chat-tmijs
 npm i
 ```
 
-### Run Electron - Desktop app
-```
-npm start
-```
-
 ### Config - Settings
 Configuration settings are at the top of scripts/tmi.js
 
 Configs:
 ```
-const config = {
+let config = {
    'channelname': 'channelname',
    'assets_dir': 'assets' // Filename with assets
 }
+```
+
+### Run Electron - Desktop app
+```
+npm start
 ```
 
 ### Some Improvements
