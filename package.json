@@ -1,9 +1,13 @@
 {
   "name": "tmijs-chat-with-electron",
+  "description": "tmi.js twitch chat web app V2 with Electronjs",
   "version": "1.0.0",
   "main": "electron.js",
   "scripts": {
     "start": "electron ."
+  },
+  "repository": {
+    "url": "https://github.com/encoderpie/twitch-chat-tmijs"
   },
   "author": "Encoderpie (Kadir)",
   "devDependencies": {

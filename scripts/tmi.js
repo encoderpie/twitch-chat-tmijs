@@ -1,7 +1,36 @@
+// Getting queries
+const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+   get: (searchParams, prop) => searchParams.get(prop)
+})
+let channelQuery = queryParams.channel
+function checkHtmlTags(string) {
+   let tagsPattern = /<(.*)>/
+   function hasHtmlTags(string) {
+      return tagsPattern.test(string)
+   }
+   if (hasHtmlTags(string)) {
+      return true
+   } else {
+      return false
+   }
+}
 // Config - default settings
 let config = {
-   'channelname': 'elraenn',
    'assets_dir_name': 'assets'
+}
+// Setting channel
+if (channelQuery != null) {
+   if (checkHtmlTags(channelQuery) == true) {
+      channelQuery = ''
+      window.location.href= '/'
+   } else {
+      config.channelname = channelQuery
+      // Change site name
+      let siteName = channelQuery.charAt(0).toUpperCase() + channelQuery.slice(1)
+      document.title = siteName + ' chat'
+   }
+} else {
+   config.channelname = 'elraenn'
 }
 // Tmi - Twitch connection
 const client = new tmi.Client({
@@ -302,7 +331,6 @@ client.on('resub', (channel, username, months, message, userstate, methods) => {
 // Sidebar chat information
 let sidebarChatInfoId = 'chat-info'
 let sidebarChatInfo = document.getElementById(sidebarChatInfoId)
-console.log(sidebarChatInfo)
 // Roomstate for Information
 const roomstate = new Map();
 client.on('roomstate', (channel, state) => {

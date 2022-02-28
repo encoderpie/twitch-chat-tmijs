@@ -39,6 +39,7 @@ npm start
 - [x] Show replied messages
 - [x] Sidebar
 - [x] Show logs (subscribers, resubs, gifts, hosts)
+- [x] Channel selection
 - [ ] Settings
 - [ ] Cookie system for chat settings
 

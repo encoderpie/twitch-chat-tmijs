@@ -141,7 +141,7 @@ body {
 
 #menu-close {
    background-color: var(--menu-button-background);
-   transition: background-color .3s;
+   transition: background-color .2s;
    border-radius: 5px;
    float: right;
    padding: 1px 7px;
@@ -164,6 +164,21 @@ body {
    background-color: rgba(44, 44, 44, 0.082);
    border-radius: 5px;
    padding: 6px 7px;
+}
+
+.menu-boxes div form input {
+   width: 100%;
+   margin-top: 5px;
+   background-color: var(--menu-button-background);
+   color: rgb(228, 228, 228);
+   border-radius: 5px;
+   border: 0;
+   padding: 6px 7px;
+   transition: background-color .2s linear;
+}
+
+.menu-boxes div form input:hover {
+   background-color: var(--menu-button-hover-background);
 }
 
 /* Column main */
