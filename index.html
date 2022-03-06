@@ -13,57 +13,52 @@
 </head>
 <body>
    <div class='columns'>
+      <!-- Column left - Sidebar -->
       <div class='column column-left sidebar'>
          <ul>
             <li id='streamer' title='Change channel'><i class='material-icons-outlined'>account_circle</i></li>
+            <li id='usersFeatured' title='Users to be featured'><i class='material-icons-outlined'>stars</i></li>
             <li id='chatInfo' title='Chat information'><i class='material-icons-outlined'>info</i></li>
             <li id='logsSettings' title='Logs settings'><i class='material-icons-outlined'>receipt_long</i></li>
             <li id='settings' title='Settings'><i class='material-icons-outlined'>settings</i></li>
             <p class='sidebar-bottom-text'>Developed by <a target='_blank' href='https://github.com/encoderpie/twitch-chat-tmijs'>encoderpie</a></p>
          </ul>
       </div>
+      <!-- Column left - Sidebar boxes -->
       <div class='column column-left' id='menu-box'>
          <div class='menu-box-header'>
             <p id='menu-title'></p>
             <div id='menu-close'><i class='material-icons-outlined'>arrow_back_ios</i></div>
          </div>
          <div class='menu-boxes'>
+            <!-- Sidebar boxes - Streamer box -->
             <div id='streamer-box' name='Connect to a chat'>
                <form style='margin: -3px 0px 3px 0px;' method='GET' action='./index.html'>
                   <input name='channel' type='text' placeholder='Channel name'>
                   <input type='submit' style='cursor: pointer;' value='Connect'></input>
                </form>
             </div>
+            <!-- Sidebar boxes - Users featured box -->
+            <div id='usersFeatured-box' name='Usernames to be featured'>
+               This part is currently unavailable
+            </div>
+            <!-- Sidebar boxes - Chat info box -->
             <div id='chatInfo-box' name='Chat informations'>
                <table id='chat-info'>
                   <tr><td>Data will be updated when message is sent to chat</td></tr>
                </table>
             </div>
-            <div id='settings-box' name='Chat settings'>
-               <table>
-                  <tr>
-                     <td>Show time in nodes</td>
-                     <td>X</td>
-                  </tr>
-                  <tr>
-                     <td>Show badges in nodes</td>
-                     <td>X</td>
-                  </tr>
-                  <tr>
-                     <td>Turn off the author/user colors</td>
-                     <td>X</td>
-                  </tr>
-                  <tr>
-                     <td>Max messages to show in chat</td>
-                     <td>X</td>
-                  </tr>
-               </table>
-            </div>
+            <!-- Sidebar boxes - Log settings box -->
             <div id='logsSettings-box' name='Logs settings'>
                This part is currently unavailable
             </div>
+            <!-- Sidebar boxes - Settings box -->
+            <div id='settings-box' name='Chat settings'>
+               This part is currently unavailable               
+            </div>
          </div>
       </div>
+      <!-- Column main - Logs -->
       <div class='column column-main'>
          <div class='logs-column'>
             <div class='logs-box'>
@@ -84,10 +79,12 @@
             </div>
          </div>
       </div>
+      <!-- Column right - Chat -->
       <div class='column column-right'>
          <div id='chat'></div>
       </div>
    </div>
+   <script src='scripts/cookie.js'></script>
    <script src='scripts/tmi.js'></script>
    <script src='scripts/sidebar.js'></script>
 </body>

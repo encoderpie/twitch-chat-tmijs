@@ -206,8 +206,7 @@ body {
 }
 
 .logs-box-header {
-   height: 10%;
-   padding: 3px 0px 0px 0px;
+   padding: 6px 0px 11px 0px;
    margin-bottom: 5px;
    text-align: center;
    border-bottom: 1px rgb(24, 24, 24) solid;
@@ -217,7 +216,7 @@ body {
 }
 
 .log-node-box {
-   max-height: 89%;
+   max-height: 92%;
    bottom: 0px;
    overflow-x: hidden;
    overflow-y: auto;

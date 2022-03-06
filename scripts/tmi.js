@@ -1,3 +1,23 @@
+// Config - default settings
+let config = {
+   assets_dir_name: 'assets',
+   default_channelname: 'elraenn',
+   max_node_limit_default: 300
+}
+// Setting default settings
+let defaultSettings = {
+   addtimetochat: false,
+   addbadgestochat: true,
+   addtimetologs: true,
+   channelname: config.default_channelname,
+   maxnodelimit: config.max_node_limit_default
+}
+for (const [settingName, settingValue] of Object.entries(defaultSettings)) {
+   let cookie = getCookie(settingName)
+   if (cookie == null) {
+      setCookie(settingName, settingValue)
+   }
+}
 // Getting queries
 const queryParams = new Proxy(new URLSearchParams(window.location.search), {
    get: (searchParams, prop) => searchParams.get(prop)
@@ -14,13 +34,12 @@ function checkHtmlTags(string) {
       return false
    }
 }
-// Config - default settings
-let config = {
-   'assets_dir_name': 'assets'
-}
 // Setting channel
 if (channelQuery != null) {
-   if (checkHtmlTags(channelQuery) == true) {
+   const doesItContainHtmlChar = checkHtmlTags(channelQuery) == true
+   const doesItContainSpaces = channelQuery.split(' ')[1] != undefined
+   const lengthRange = channelQuery.length < 4 || channelQuery.length > 25
+   if (doesItContainHtmlChar || doesItContainSpaces || lengthRange) {
       channelQuery = ''
       window.location.href= '/'
    } else {
@@ -28,9 +47,15 @@ if (channelQuery != null) {
       // Change site name
       let siteName = channelQuery.charAt(0).toUpperCase() + channelQuery.slice(1)
       document.title = siteName + ' chat'
+      setCookie('channelname', channelQuery)
    }
 } else {
-   config.channelname = 'elraenn'
+   let channel = getCookie('channelname')
+   if (channel == null) {
+      config.channelname = config.default_channelname
+   } else {
+      config.channelname = channel
+   }
 }
 // Tmi - Twitch connection
 const client = new tmi.Client({
@@ -92,7 +117,6 @@ let badges = {
    'moderator': 'https://static-cdn.jtvnw.net/badges/v1/3267646d-33f0-4b17-b3df-f923a41db1d0/1',
    'subscriber': `${config['assets_dir_name']}/sub1.png` // or sub2.png
 }
-let badgeNames = Object.keys(badges)
 function addBadges(user, whereToAdd) {
    let userBadges = user['badges']
    let userBadgesInfo = user['badge-info']
@@ -101,12 +125,8 @@ function addBadges(user, whereToAdd) {
          let badgeImg = document.createElement('img')
          if (Object.hasOwn(userBadges, badgeName)) {
             if (badgeName == 'subscriber') {
-               for (const [badgeInfoName, value] of Object.entries(userBadgesInfo)) {
-                  if (badgeInfoName == 'subscriber') {
-                     badgeImg.setAttribute('title', `${value} month subscription`)
-                     badgeImg.classList.add('node-sub-badge-img')
-                  }
-               }
+               badgeImg.setAttribute('title', `${userBadgesInfo.subscriber} month subscription`)
+               badgeImg.classList.add('node-sub-badge-img')
             }
             badgeImg.setAttribute('src', badgeImgSrc)
             badgeImg.classList.add('node-badge-img')
@@ -123,17 +143,14 @@ function filterMessage(rawMessage, user) {
       let cutTheRawMessage = `@${repliedUser} `
       filteredMessage = rawMessage.slice(cutTheRawMessage.length)
    }
-   return filteredMessage.trim()
+   return filteredMessage
 }
 // Adding Author name & message, example: 'user823: hello everyone!'
 function addMessage(nodeType, rawMessage, whereToAdd, user) {
    let element = document.createElement('div')
    let intermediatePart
    let filteredMessage
-   if (nodeType == 'systemnode') {
-      intermediatePart = ''
-      filteredMessage = rawMessage
-   } else if (nodeType == 'chatnode') {
+   if (nodeType == 'chatnode') {
       // Author & Author's color
       let authorPart = document.createElement('p')
       authorPart.className = 'node-author-name'
@@ -144,6 +161,9 @@ function addMessage(nodeType, rawMessage, whereToAdd, user) {
       whereToAdd.appendChild(authorPart)
       intermediatePart = ': ' // Example: 'author_name: message'
       filteredMessage = filterMessage(rawMessage, user)
+   } else {
+      intermediatePart = ''
+      filteredMessage = rawMessage
    }
    // Message
    let messagePart = document.createElement('p')
@@ -153,10 +173,12 @@ function addMessage(nodeType, rawMessage, whereToAdd, user) {
    whereToAdd.appendChild(messagePart)
 }
 // Checking nodes for chat node limit
-let maxNodeLimit = 100
-let manyNodesAreInChat = 0
 function checkNodes() {
-   manyNodesAreInChat += 1
+   let maxNodeLimit = getCookie('maxnodelimit')
+   if (maxNodeLimit == null) {
+      maxNodeLimit = config.max_node_limit_default
+   }
+   let manyNodesAreInChat = chat.childElementCount
    if (manyNodesAreInChat > maxNodeLimit) {
       chat.removeChild(chat.firstElementChild)
    }
@@ -180,17 +202,17 @@ function createNode(nodeType, rawMessage, user) {
          whereToAddElements = document.createElement('div')
       }
       // Adding the Time, Badges, Author name & Message
-      addCurrentTime(whereToAddElements)
-      addBadges(user, whereToAddElements)
+      if (getCookie('addtimetochat') == 'true') {addCurrentTime(whereToAddElements)}
+      if (getCookie('addbadgestochat') == 'true') {addBadges(user, whereToAddElements)}
       addMessage(nodeType, rawMessage, whereToAddElements, user)
       if (userRepliedToAnyUser) {
          node.appendChild(whereToAddElements)
       }
-   } else if (nodeType == 'systemnode') {
+   } else {
       // If node is systemnode, show it
-      addCurrentTime(node)
+      if (getCookie('addtimetochat') == 'true') {addCurrentTime(whereToAddElements)}
       node.classList.add('system-node')
-      addMessage(nodeType, rawMessage, node)
+      addMessage(nodeType, rawMessage, whereToAddElements)
    }
    // Sending node to chat
    chat.appendChild(node)
@@ -203,7 +225,7 @@ client.on('message', (channel, user, rawMessage, self) => {
    if(self) return;
    createNode('chatnode', rawMessage, user)
 })
-// Functions for system nodes, example: Connected!
+// Functions for system nodes, example: Connected to channel!
 client.on('connected', () => {
    createNode('systemnode', `Connected to ${config['channelname']}!`)
 })
@@ -221,6 +243,9 @@ client.on('messagedeleted', (channel, username, deletedMessage, userstate) => {
 })
 client.on('notice', (msgid, message) => {
    createNode('systemnode', `msgid: ${msgid}, message: ${message}`)
+   if (message == 'msg_channel_suspended') {
+      window.location.href= '/'
+   }
 })
 client.on('emoteonly', (channel, enabled) => {
    if (enabled) {
@@ -278,25 +303,28 @@ function createLogNode(whereToAdd, text) {
    let logBox = logBoxesObject[whereToAdd]
    const isScrolledToBottom = logBox.scrollHeight - logBox.clientHeight <= logBox.scrollTop + 1
    let logNode = document.createElement('div')
-   let logNodeTime = document.createElement('p')
+   if (getCookie('addtimetologs') == 'true') {
+      let logNodeTime = document.createElement('p')
+      logNodeTime.className = 'log-node-time'
+      logNodeTime.innerText = getCurrentTime()
+      logNode.appendChild(logNodeTime)
+   }
    let logNodeText = document.createElement('p')
    logBox.className = 'log-node-box'
    logNode.className = 'log-node'
-   logNodeTime.className = 'log-node-time'
    logNodeText.className = 'log-node-text'
-   logNodeTime.innerText = getCurrentTime()
    logNodeText.innerText = text
-   logNode.appendChild(logNodeTime)
    logNode.appendChild(logNodeText)
    logBox.appendChild(logNode)
+   createNode('lognode', text)
    if (isScrolledToBottom) {
       logBox.scrollTop = logBox.scrollHeight - logBox.clientHeight
    }
 }
 // Host logs
 client.on('hosted', (channel, username, viewers, autohost) => {
-   let autohostText = ''
-   if (autohost) { autohostText = 'Is autohost.' }
+   let autohostText
+   autohost ? autohostText = 'Is autohost.' : autohostText = ''
    createLogNode('hosts', `Hosting to ${username}, ${viewers} viewer. ${autohostText}`)
 })
 client.on('hosting', (channel, target, viewers) => {
@@ -307,7 +335,9 @@ client.on('raided', (channel, username, viewers) => {
 })
 // Sub logs
 client.on('subscription', (channel, username, methods, message, userstate) => {
-   createLogNode('subscription', `${userstate['display-name']} has just subscribed!`)
+   let said
+   message ? said = `Said: ${message}` : said = ''
+   createLogNode('subscription', `${userstate['display-name']} has just subscribed! ${said}`)
 })
 // Gift logs
 client.on('submysterygift', (channel, username, numbOfSubs, methods, userstate) => {
@@ -326,7 +356,9 @@ client.on('resub', (channel, username, months, message, userstate, methods) => {
    } else {
       monthNum = month
    }
-   createLogNode('resubs', `${userstate['display-name']} has subscribed for ${monthNum} months in a row!`)
+   let said
+   message ? said = `Said: ${message}` : said = ''
+   createLogNode('resubs', `${userstate['display-name']} has resubscribed for ${monthNum} months in a row! ${said}`)
 })
 // Sidebar chat information
 let sidebarChatInfoId = 'chat-info'

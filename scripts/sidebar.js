@@ -2,6 +2,7 @@ let menu = document.getElementById('menu-box')
 let menuTitle = document.getElementById('menu-title')
 let buttonsObject = {
    streamerButton: document.getElementById('streamer'),
+   usersFeaturedButton: document.getElementById('usersFeatured'),
    chatInfoButton: document.getElementById('chatInfo'),
    logsSettings: document.getElementById('logsSettings'),
    settingsButton: document.getElementById('settings')
