@@ -20,9 +20,19 @@ Configuration settings are at the top of scripts/tmi.js
 
 Configs:
 ```
+// Config - default settings
 let config = {
-   'channelname': 'channelname',
-   'assets_dir': 'assets' // Filename with assets
+   assets_dir_name: 'assets',
+   default_channelname: 'elraenn',
+   max_node_limit_default: 300
+}
+// Setting default settings
+let defaultSettings = {
+   addtimetochat: false,
+   addbadgestochat: true,
+   addtimetologs: true,
+   channelname: config.default_channelname,
+   maxnodelimit: config.max_node_limit_default
 }
 ```
 
